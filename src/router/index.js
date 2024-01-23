@@ -8,6 +8,9 @@ import admin from '../pages/admin.vue'
 import adminHome from "../pages/adminpages/home.vue"
 import userList from "../pages/adminpages/user/list.vue"
 import devicesList from "../pages/adminpages/devices/list.vue"
+import Visboard from "../pages/Visboard.vue"
+import Allvis from "../pages/allBoard/allBoard.vue"
+import Contestboard from "../pages/Contestboard.vue"
 
 Vue.use(VueRouter)
 
@@ -37,6 +40,21 @@ const routes = [
     path: '/shootboard',
     name: 'shootboard',
     component: Shootboard
+  },
+  {
+    path: '/visboard',
+    name: 'visboard',
+    component: Visboard
+  },
+  {
+    path: '/allboard',
+    name: 'allboard',
+    component: Allvis
+  },
+  {
+    path: '/contestboard',
+    name: 'contestboard',
+    component: Contestboard
   },
   {
     path: '/test',

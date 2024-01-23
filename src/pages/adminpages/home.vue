@@ -30,13 +30,12 @@ export default {
         }
     },
     components: {
-     
     },
     created() {
         this.fullscreenLoading = true;
         const token = Cookies.get('token'); // 获取名为 'username' 的cookie的值
         if (token) {
-            this.user = JSON.parse(atob(token));
+            this.user = JSON.parse(decodeURIComponent(atob(token)));
             console.log(this.user);
             if(this.user.rule <10){
                 console.log('Cookie不存在');

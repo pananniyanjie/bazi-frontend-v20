@@ -82,7 +82,7 @@
         <!-- 选择枪位对话框 -->
         <el-dialog title="请选择靶位" :visible.sync="ChooseShootSit" width="80%" center>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" >多靶位预览</el-button>
+                <el-button type="primary" @click="gotoallboard()">多靶位预览</el-button>
             </span>
             <div class="shootlst">
 
@@ -104,7 +104,7 @@
                                         }}</el-button>
                                     <el-button :disabled="it.state == 2" style="margin-top:10px;margin-left:0"
                                         :type="it.state != 2 ? 'success' : 'info'" class="button"
-                                        @click="gotoshootboard(it)">{{ it.state != 2 ? '前往观战' : '设备离线' }}</el-button>
+                                        @click="gotovisboard(it)">{{ it.state != 2 ? '前往观战' : '设备离线' }}</el-button>
                                 </div>
                             </div>
                         </div>
@@ -153,10 +153,7 @@ export default {
 
         const token = Cookies.get('token'); // 获取名为 'username' 的cookie的值
         if (token) {
-
-            console.log("token: " + token);
-            console.log("rowtoken: " + atob(token));
-            this.user = JSON.parse(atob(token));
+            this.user = JSON.parse(decodeURIComponent(atob(token)));
             console.log(this.user);
             if (this.user.rule >= 10) this.adminisShow = true;
 
@@ -189,33 +186,32 @@ export default {
         gotoShoot() {
             this.ChooseShootSit = true;
             // this.$router.push('/shootboard?from=home');
-
         },
         gotoshootboard(it) {
-            console.log(it.id + " - " + it.link_user + " - " + it.nick_name);
-
-
+            if(it.mode == 1){
+                this.$router.push('/shootboard?baziId=' + it.id + '&mode=' + it.mode + '&onlyVis=0&from=home');
+            }else{
+                this.$router.push('/contestboard?baziId=' + it.id + '&mode=' + it.mode + '&onlyVis=0&from=home');
+            }
+            
+        },
+        gotovisboard(it) {
+            this.$router.push('/visboard?baziId=' + it.id + '&mode=' + it.mode + '&onlyVis=1&from=home');
+        },
+        gotoallboard() {
+            this.$router.push('/allboard');
         },
         gotoList() {
-
-
             this.$router.push('/examlist');
-
         },
         gotoPerson() {
-
             this.$router.push('/my');
-
         },
         gotoSetting() {
-
             this.$router.push('/setting');
-
         },
         gotoAdmin() {
-
             this.$router.push('/admin/home');
-
         }
     }
 }

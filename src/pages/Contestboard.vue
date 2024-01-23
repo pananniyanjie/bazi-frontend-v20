@@ -50,7 +50,7 @@
 
               <el-button @click="btnStart" type="primary">{{ sysinfo.start == 0 ? '开始' : '结束' }}</el-button>
               <el-button @click="btnClear" type="primary">清空</el-button>
-              <el-button @click="btnMode" type="primary">赛/练</el-button>
+              <!--<el-button @click="btnMode" type="primary" >赛/练</el-button>-->
               <!--<el-button @click="test" type="primary">测试</el-button>-->
               <el-button @click="btnMenu" type="primary">菜单</el-button>
               <el-button @click="btn" type="primary">设置</el-button>
@@ -79,7 +79,7 @@
 
         <div style="margin-top:10px">
           <span>其他</span>
-          <el-button style="margin-left:10px" type="primary" icon="el-icon-paperclip">绑定分组</el-button>
+          <!--<el-button style="margin-left:10px" type="primary" icon="el-icon-paperclip">绑定分组</el-button>-->
           <el-button style="margin-left:10px" type="primary" icon="el-icon-paperclip" @click="btnSwitch">切换
             手/步</el-button>
           <el-button style="margin-left:10px" type="primary" icon="el-icon-headset">反馈</el-button>
@@ -199,12 +199,12 @@
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Buffer } from 'buffer';
+import { Base64 } from 'js-base64'
 export default {
-  name: 'Shootborad',
+  name: 'Contestborad',
   data() {
     return {
       timetitle: null,
-      baziId:null,
       ruleForm: {
         name: '',
 
@@ -387,7 +387,7 @@ export default {
     this.sysinfo.mode = this.config.firstmode
     this.sysinfo.type = this.config.firsttype
 
-    this.baziId = this.$route.query.baziId;
+
 
 
     this.play("欢迎使用" + this.config.oemtitle + "激光射击练习系统", 1)
@@ -504,12 +504,16 @@ export default {
 
     },
     btnStart() {
+      this.$message.error('管理员已将本靶设置为比赛模式，请等待裁判发令！');
+
+      /** 
       if (this.sysinfo.start == 0) {
         this.gameon();
       } else {
         this.gameoff();
 
       }
+      */
     },
     btnClear() {
       if (!(this.sysinfo.start != 0) || this.sysinfo.mode == 0) {
@@ -553,7 +557,7 @@ export default {
         axios.post('/api/shoot/getlist.php',
           {
             token: Cookies.get('token'),
-            baziId: this.baziId,
+            baziId: this.$route.query.baziId,
             startime: this.sysinfo.startTime,
             endtime: this.sysinfo.endTime,
             type: 0
@@ -860,15 +864,16 @@ export default {
           let tmp = JSON.parse(decodeURIComponent(atob(Cookies.get("token"))));
           tmp.setting = this.config;
           console.log(JSON.stringify(tmp));
-          let jsonBuffer = Buffer.from(JSON.stringify(tmp));
-          let base64Buffer = jsonBuffer.toString('base64');
+          console.log("json字符化后=" +JSON.stringify(tmp));
+          console.log("uri编码后" + encodeURIComponent(JSON.stringify(tmp)));
+          let base64Buffer = Base64.encode(encodeURIComponent(JSON.stringify(tmp)));
 
-
-          Cookies.set("token", base64Buffer);
+          Cookies.set("token", Base64.encode(encodeURIComponent(JSON.stringify(tmp))));
           console.log(base64Buffer);
           let tm = tmp.setting;
-          jsonBuffer = Buffer.from(JSON.stringify(tm));
-          base64Buffer = jsonBuffer.toString('base64');
+          //ase64Buffer = jsonBuffer.toString('base64');
+          base64Buffer = Base64.encode(encodeURIComponent(JSON.stringify(tm)));
+          console.log("加密后config" + base64Buffer);
           axios.post('/api/user/setuserconfig.php',
             {
               token: Cookies.get('token'),

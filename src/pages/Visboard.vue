@@ -13,7 +13,7 @@
         <div ref="lbox" class="leftbox">
           <img ref="backImg" id="canven-img" class="canven-img"
             v-bind:style="{ width: wd.kuan + 'px', height: wd.gao + 'px' }"
-            :src="sysinfo.type == 0 ? 'shou.png' : 'bu.png'" alt="" />
+            :src="sysinfo.type == 1 ? 'shou.png' : 'bu.png'" alt="" />
           <canvas id="baziCanvas" class="bazicanven"
             v-bind:style="{ top: 0, width: wd.kuan + 'px', height: wd.kuan + 'px' }"></canvas>
         </div>
@@ -204,7 +204,7 @@ export default {
   data() {
     return {
       timetitle: null,
-      baziId:null,
+      upnum: 0,
       ruleForm: {
         name: '',
 
@@ -387,7 +387,7 @@ export default {
     this.sysinfo.mode = this.config.firstmode
     this.sysinfo.type = this.config.firsttype
 
-    this.baziId = this.$route.query.baziId;
+
 
 
     this.play("欢迎使用" + this.config.oemtitle + "激光射击练习系统", 1)
@@ -553,10 +553,10 @@ export default {
         axios.post('/api/shoot/getlist.php',
           {
             token: Cookies.get('token'),
-            baziId: this.baziId,
+            baziId: this.$route.query.baziId,
             startime: this.sysinfo.startTime,
             endtime: this.sysinfo.endTime,
-            type: 0
+            type: 1
           })
           .then(res => {
 
@@ -568,56 +568,66 @@ export default {
                 if (this.sysinfo.start == 0) {
                   this.timeLock = false;
                 } else {
-                  for (let i = 0; i < res.data.data.length; i++) {
-                    //计算轮次
-                    let tmp = this.tmp;
-                    tmp.id = this.sysinfo.round;
-                    this.sysinfo.round = this.sysinfo.round + 1;
-                    //显示靶号，射击人，保存坐标
-                    tmp.bazi_id = res.data.data[i].bazi_id;
-                    tmp.username = this.user.nickname;
-                    tmp.point_x = res.data.data[i].point_x;
-                    tmp.point_y = res.data.data[i].point_y;
-                    tmp.shoot_time = res.data.data[i].shoot_time;
-                    //计算成绩
-                    let num = this.getrealnum(res.data.data[i].scoure)
-                    tmp.scoure = this.numTotext(num)
-
-                    //如果成绩是0显示脱靶但是不改内部
-                    if (tmp.scoure == 0) {
-                      this.nowscore = "脱靶";
-                      //报靶
-                      this.play(this.nowscore, 2);
-                    } else {
-                      this.nowscore = tmp.scoure;
-                      //报靶
-                      this.play(this.nowscore + "环", 2);
-                    }
-
-                    //显示方位，计算时间差
-                    tmp.type = this.dir[Number(res.data.data[i].type)];
-                    let timeab = 0.00;
-                    if (this.tableData.length != 0) {
-                      timeab = res.data.data[i].shoot_time - this.tableData[0].shoot_time;
-                      timeab = timeab / 1000;
-                      timeab = timeab.toFixed(2)
-                    } else {
-                      timeab = 0.00;
-                    }
-                    tmp.timeabs = timeab
-                    //累计成绩
-                    this.sysinfo.sum += Number(num);
-                    tmp.allsum = this.numTotext(this.sysinfo.sum);
-                    //插入队首
-                    this.tableData.unshift(JSON.parse(JSON.stringify(tmp)));
+                  if (res.data.data.length != this.upnum) {
+                    this.upnum =res.data.data.length;
+                    this.tableData = []
+                    this.sysinfo.round = 1;
                     this.playbiu();
+                    for (let i = 0; i < res.data.data.length; i++) {
+                      //计算轮次
+                      let tmp = this.tmp;
+                      tmp.id = this.sysinfo.round;
+                      this.sysinfo.round = this.sysinfo.round + 1;
+                      //显示靶号，射击人，保存坐标
+                      tmp.bazi_id = res.data.data[i].bazi_id;
+                      tmp.username = this.user.nickname;
+                      tmp.point_x = res.data.data[i].point_x;
+                      tmp.point_y = res.data.data[i].point_y;
+                      tmp.shoot_time = res.data.data[i].shoot_time;
+                      //计算成绩
+                      let num = this.getrealnum(res.data.data[i].scoure)
+                      tmp.scoure = this.numTotext(num)
+
+                      if (i == res.data.data.length - 1) {
+                        //如果成绩是0显示脱靶但是不改内部
+                        if (tmp.scoure == 0) {
+                          this.nowscore = "脱靶";
+                          //报靶
+                          this.play(this.nowscore, 2);
+                        } else {
+                          this.nowscore = tmp.scoure;
+                          //报靶
+                          this.play(this.nowscore + "环", 2);
+                        }
+                      }
+
+                      //显示方位，计算时间差
+                      tmp.type = this.dir[Number(res.data.data[i].type)];
+                      let timeab = 0.00;
+                      if (this.tableData.length != 0) {
+                        timeab = res.data.data[i].shoot_time - this.tableData[0].shoot_time;
+                        timeab = timeab / 1000;
+                        timeab = timeab.toFixed(2)
+                      } else {
+                        timeab = 0.00;
+                      }
+                      tmp.timeabs = timeab
+                      //累计成绩
+                      this.sysinfo.sum += Number(num);
+                      tmp.allsum = this.numTotext(this.sysinfo.sum);
+                      //插入队首
+                      this.tableData.unshift(JSON.parse(JSON.stringify(tmp)));
 
 
-                    if (this.sysinfo.round > 999) {
-                      this.gameoff();
-                      break;
+
+                      if (this.sysinfo.round > 999) {
+                        this.gameoff();
+                        break;
+                      }
                     }
                   }
+
+
                   this.timeLock = false;
                 }
 
@@ -876,7 +886,6 @@ export default {
             }).then(res => {
               if (res.data.code == 200) {
                 this.$message.success("更新成功，正在刷新页面");
-                this.$router.go(0); // 刷新当前页面
               } else {
                 this.$message.error('保存配置失败 [' + res.data.msg + ']');
               }
