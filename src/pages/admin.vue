@@ -1,7 +1,6 @@
 <template>
     <div class="admin-box" >
         <el-container>
-
             <el-aside width="200px">
                 <Asidemenu></Asidemenu>
             </el-aside>
@@ -10,7 +9,7 @@
                     <MenuHeader></MenuHeader>
                 </el-header>
                 <el-main >
-                    <router-view :v-loading="fullscreenLoading" />
+                    <router-view />
                 </el-main>
                 <el-footer class="footer">
                     <Footermenu></Footermenu>
