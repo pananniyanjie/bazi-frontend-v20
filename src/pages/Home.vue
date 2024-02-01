@@ -96,6 +96,7 @@
                                 <!-- <time class="time">{{ it.mac }}</time><br /> -->
                                 <time class="time" style="color:darkgray;font-size:13px">模式：{{ it.type == 1 ? '手枪靶' : '步枪靶'
                                 }}</time><br />
+                                <time class="time" style="color:darkgray;font-size:13px">占用：{{ it.nick_name }}</time><br />
                                 <div style="display:flex;flex-direction: column">
                                     <el-button :disabled="it.state == 2" style="margin-top:10px"
                                         :type="it.state != 2 ? 'success' : 'info'" class="button"
@@ -188,12 +189,29 @@ export default {
             // this.$router.push('/shootboard?from=home');
         },
         gotoshootboard(it) {
-            if(it.mode == 1){
-                this.$router.push('/shootboard?baziId=' + it.id + '&mode=' + it.mode + '&onlyVis=0&from=home');
-            }else{
-                this.$router.push('/contestboard?baziId=' + it.id + '&mode=' + it.mode + '&onlyVis=0&from=home');
-            }
-            
+            axios.post('/api/user/useBazi.php',
+                {
+                    token: Cookies.get('token'),
+                    bazi_id: it.id
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        this.$message.success("正在进入");
+                        if (it.mode == 1) {
+                            this.$router.push('/shootboard?baziId=' + it.id + '&mode=' + it.mode + '&onlyVis=0&from=home');
+                        } else {
+                            this.$router.push('/contestboard?baziId=' + it.id + '&mode=' + it.mode + '&onlyVis=0&from=home');
+                        }
+                    } else {
+                        this.$message.error('跳转失败 [' + res.data.msg + ']');
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.$message.error('502 服务器连接失败 [' + err.message + "]");
+                });
+
+
+
         },
         gotovisboard(it) {
             this.$router.push('/visboard?baziId=' + it.id + '&mode=' + it.mode + '&onlyVis=1&from=home');
@@ -284,7 +302,7 @@ export default {
         height: 220px;
         width: 150px;
         margin: 10px;
-        margin-top: 15px;
+        margin-top: 25px;
     }
 
 }

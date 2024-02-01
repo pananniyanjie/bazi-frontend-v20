@@ -140,7 +140,7 @@
 
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" :a="scope">编辑</el-button>
+            <el-button size="mini" :a="scope" @click="updataUser(scope.row)">编辑</el-button>
             <el-button size="mini" type="danger">删除</el-button>
           </template>
         </el-table-column>
@@ -161,14 +161,14 @@
         append-to-body
       >
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-form-item label="部门ID" prop="deptId" >
-            <el-input v-model="form.deptId" placeholder="请输入部门ID" :disable="title == '新增客户'"/>
+          <el-form-item label="ID" prop="deptId" >
+            <el-input v-model="form.id" placeholder="请输入部门ID" :disable="title == '新增客户'"/>
           </el-form-item>
           <el-form-item label="用户账号" prop="userName">
-            <el-input v-model="form.userName" placeholder="请输入用户账号" />
+            <el-input v-model="form.username" placeholder="请输入用户账号" />
           </el-form-item>
           <el-form-item label="用户昵称" prop="nickName">
-            <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
+            <el-input v-model="form.nick_name" placeholder="请输入用户昵称" />
           </el-form-item>
           <el-form-item label="用户邮箱" prop="email">
             <el-input v-model="form.email" placeholder="请输入用户邮箱" />
@@ -345,7 +345,15 @@ export default {
     },
     /** 新增用户 **/
     createUser() {
+      this.form = {};
       this.title = "新增客户";
+      this.open = true;
+    },
+    /** 编辑用户 **/
+    updataUser(it) {
+      this.title = "编辑客户";
+      console.log(it);
+      this.form = it;
       this.open = true;
     },
   },

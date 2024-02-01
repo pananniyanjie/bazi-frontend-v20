@@ -635,84 +635,89 @@ export default {
                 //比赛模式
                 //没开始的所有信号都不算
                 //过滤中间态
-                if (this.sysinfo.start == 0 || this.sysinfo.start == 2) {
-                  this.timeLock = false;
-                } else {
-                  //表示预备/正式开始
-                  for (let i = 0; i < res.data.data.length; i++) {
+                if (res.data.data.length != this.upnum) {
+                  this.tableData = [];
+                  this.sysinfo.round = 1;
+                  this.upnum = res.data.data.length;
+                  if (this.sysinfo.start == 0 || this.sysinfo.start == 2) {
+                    this.timeLock = false;
+                  } else {
+                    //表示预备/正式开始
+                    for (let i = 0; i < res.data.data.length; i++) {
 
-                    //第一枪要作为信号枪过滤。
-                    if (this.sysinfo.start == 1) {
-                      this.sysinfo.start = 2;
-                      this.play("3", 1);
+                      //第一枪要作为信号枪过滤。
+                      if (this.sysinfo.start == 1) {
+                        this.sysinfo.start = 2;
+                        this.play("3", 1);
+                        setTimeout(function () {
+                          that.play("2", 1);
+                        }, 1000);
+                        setTimeout(function () {
+                          that.play("1", 1);
+                        }, 2000);
+                        setTimeout(function () {
+                          that.play("比赛开始", 1);
+                          that.sysinfo.start = 3;
+                        }, 4000);
 
-                      setTimeout(function () {
-                        that.play("2", 1);
-                      }, 1000);
-                      setTimeout(function () {
-                        that.play("1", 1);
-                      }, 2000);
-                      setTimeout(function () {
-                        that.play("比赛开始", 1);
-                        that.sysinfo.start = 3;
-                      }, 4000);
-
-                      break;
-                    }
-                    //正式开始
-                    if (this.sysinfo.start == 3) {
-                      //计算轮次
-                      let tmp = this.tmp;
-                      tmp.id = this.sysinfo.round;
-                      this.sysinfo.round = this.sysinfo.round + 1;
-                      //显示靶号，射击人，保存坐标
-                      tmp.bazi_id = res.data.data[i].bazi_id;
-                      tmp.username = this.user.nickname;
-                      tmp.point_x = res.data.data[i].point_x;
-                      tmp.point_y = res.data.data[i].point_y;
-                      tmp.shoot_time = res.data.data[i].shoot_time;
-                      //计算成绩
-                      let num = this.getrealnum(res.data.data[i].scoure)
-                      tmp.scoure = this.numTotext(num)
-
-                      //如果成绩是0显示脱靶但是不改内部
-                      if (tmp.scoure == 0) {
-                        this.nowscore = "脱靶";
-                        //报靶
-                        this.play(this.nowscore, 2);
-                      } else {
-                        this.nowscore = tmp.scoure;
-                        //报靶
-                        this.play(this.nowscore + "环", 2);
+                        break;
                       }
+                      if(i==0)continue;
+                      //正式开始
+                      if (this.sysinfo.start == 3) {
+                        //计算轮次
+                        let tmp = this.tmp;
+                        tmp.id = this.sysinfo.round;
+                        this.sysinfo.round = this.sysinfo.round + 1;
+                        //显示靶号，射击人，保存坐标
+                        tmp.bazi_id = res.data.data[i].bazi_id;
+                        tmp.username = this.user.nickname;
+                        tmp.point_x = res.data.data[i].point_x;
+                        tmp.point_y = res.data.data[i].point_y;
+                        tmp.shoot_time = res.data.data[i].shoot_time;
+                        //计算成绩
+                        let num = this.getrealnum(res.data.data[i].scoure)
+                        tmp.scoure = this.numTotext(num)
 
-                      //显示方位，计算时间差
-                      tmp.type = this.dir[Number(res.data.data[i].type)];
-                      let timeab = 0.00;
-                      if (this.tableData.length != 0) {
-                        timeab = res.data.data[i].shoot_time - this.tableData[0].shoot_time;
-                        timeab = timeab / 1000;
-                        timeab = timeab.toFixed(2)
-                      } else {
-                        timeab = 0.00;
-                      }
-                      tmp.timeabs = timeab
-                      //累计成绩
-                      this.sysinfo.sum += Number(num);
-                      tmp.allsum = this.numTotext(this.sysinfo.sum);
-                      //插入队首
-                      this.tableData.unshift(JSON.parse(JSON.stringify(tmp)));
-                      this.playbiu();
+                        //如果成绩是0显示脱靶但是不改内部
+                        if (tmp.scoure == 0) {
+                          this.nowscore = "脱靶";
+                          //报靶
+                          this.play(this.nowscore, 2);
+                        } else {
+                          this.nowscore = tmp.scoure;
+                          //报靶
+                          this.play(this.nowscore + "环", 2);
+                        }
 
-                      if (this.sysinfo.round > this.sysinfo.allRound) {
-                        this.gameoff();
-                        return;
+                        //显示方位，计算时间差
+                        tmp.type = this.dir[Number(res.data.data[i].type)];
+                        let timeab = 0.00;
+                        if (this.tableData.length != 0) {
+                          timeab = res.data.data[i].shoot_time - this.tableData[0].shoot_time;
+                          timeab = timeab / 1000;
+                          timeab = timeab.toFixed(2)
+                        } else {
+                          timeab = 0.00;
+                        }
+                        tmp.timeabs = timeab
+                        //累计成绩
+                        this.sysinfo.sum += Number(num);
+                        tmp.allsum = this.numTotext(this.sysinfo.sum);
+                        //插入队首
+                        this.tableData.unshift(JSON.parse(JSON.stringify(tmp)));
+                        this.playbiu();
+
+                        if (this.sysinfo.round > this.sysinfo.allRound) {
+                          this.gameoff();
+                          return;
+                        }
                       }
                     }
                   }
                   this.timeLock = false;
                 }
-
+                this.timeLock = false;
               }
             } else {
               this.$message.error(res.data.msg);

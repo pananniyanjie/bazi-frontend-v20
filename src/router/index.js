@@ -11,7 +11,7 @@ import devicesList from "../pages/adminpages/devices/list.vue"
 import Visboard from "../pages/Visboard.vue"
 import Allvis from "../pages/allBoard/allBoard.vue"
 import Contestboard from "../pages/Contestboard.vue"
-
+import examList from "../pages/adminpages/exam/contestMgr.vue"
 Vue.use(VueRouter)
 
 const routes = [
@@ -81,6 +81,11 @@ const routes = [
         path: 'deviceslist',
         name: 'deviceslist',
         component: devicesList
+      },
+      {
+        path: 'examlist',
+        name: 'examlist',
+        component: examList
       }
     ]
   }

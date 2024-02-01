@@ -82,7 +82,7 @@ export default {
                     children: [
                         {
                             name: 'examlist',
-                            label: '竞赛列表',
+                            label: '裁判面板',
                             icon: 'setting',
                         }
                     ]

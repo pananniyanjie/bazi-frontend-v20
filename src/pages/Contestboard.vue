@@ -5,7 +5,7 @@
     <div id="shootboxMid" class="mid">
       <div class="headbox">
         <h3>欢迎使用{{ config.oemtitle }}激光射击练习系统 已授权 <span class="modeText">{{ sysinfo.mode == 0 ? '练习模式' : '比赛模式' }}</span>
-          <span class="timeText">{{ timetitle }}</span>
+          <!--span class="timeText">{{ timetitle }}</span -->
         </h3>
         <h3>当前射手：{{ user.nickname }}</h3>
       </div>
@@ -48,7 +48,7 @@
           <div class="endbox">
             <div class="btnList">
 
-              <el-button @click="btnStart" type="primary">{{ sysinfo.start == 0 ? '开始' : '结束' }}</el-button>
+              <el-button @click="btnStart" type="primary">{{ sysinfo.start == 0 ? '预备' : '结束' }}</el-button>
               <el-button @click="btnClear" type="primary">清空</el-button>
               <!--<el-button @click="btnMode" type="primary" >赛/练</el-button>-->
               <!--<el-button @click="test" type="primary">测试</el-button>-->
@@ -94,13 +94,13 @@
 
         <el-form :model="config" :rules="rules" ref="ruleForm" style="width: 95%" label-width="100px"
           class="demo-ruleForm">
-          <el-form-item label="计分精度" prop="decimal">
+          <!-- <el-form-item label="计分精度" prop="decimal">
             <el-select v-model="config.decimal" placeholder="请选择计分精度">
               <el-option label="整数" :value=0></el-option>
               <el-option label="单精度" :value=1></el-option>
               <el-option label="双精度" :value=2></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="语音播报" prop="TTSstate">
             <el-select v-model="config.TTSstate" placeholder="请选择播报方式">
               <el-option label="全部播报" :value=1></el-option>
@@ -109,79 +109,31 @@
               <el-option label="全部关闭" :value=0></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="默认靶纸" prop="firsttype">
+          <!-- <el-form-item label="默认靶纸" prop="firsttype">
             <el-select v-model="config.firsttype" placeholder="请选择靶纸">
               <el-option label="手枪靶" :value=0></el-option>
               <el-option label="步枪靶" :value=1></el-option>
-              <!-- <el-option label="仅播报操作" :value=2></el-option>
-              <el-option label="全部关闭" :value=3></el-option> -->
             </el-select>
-          </el-form-item>
-          <el-form-item label="默认模式" prop="firstmode">
+          </el-form-item> -->
+          <!-- <el-form-item label="默认模式" prop="firstmode">
             <el-select v-model="config.firstmode" placeholder="请选择靶纸">
               <el-option label="练习模式" :value=0></el-option>
               <el-option label="比赛模式" :value=1></el-option>
-              <!-- <el-option label="仅播报操作" :value=2></el-option>
-              <el-option label="全部关闭" :value=3></el-option> -->
             </el-select>
-          </el-form-item>
-          <el-form-item label="轮次" prop="round">
+          </el-form-item> -->
+          <!-- <el-form-item label="轮次" prop="round">
             <el-input v-model.number="config.round"></el-input>
           </el-form-item>
           <el-form-item label="时间" prop="time">
             <el-input v-model.number="config.time"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="播报速度" prop="TTSspeed">
             <el-input v-model.number="config.TTSspeed"></el-input>
           </el-form-item>
           <el-form-item label="播报音调" prop="TTShz">
             <el-input v-model.number="config.TTShz"></el-input>
           </el-form-item>
-          <!--
-          <el-form-item label="活动名称" prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="活动区域" prop="region">
-            <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="活动时间" required>
-            <el-col :span="11">
-              <el-form-item prop="date1">
-                <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1"
-                  style="width: 95%;"></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col class="line" :span="2">-</el-col>
-            <el-col :span="11">
-              <el-form-item prop="date2">
-                <el-time-picker placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
-              </el-form-item>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="即时配送" prop="delivery">
-            <el-switch v-model="ruleForm.delivery"></el-switch>
-          </el-form-item>
-          <el-form-item label="活动性质" prop="type">
-            <el-checkbox-group v-model="ruleForm.type">
-              <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-              <el-checkbox label="地推活动" name="type"></el-checkbox>
-              <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-              <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="特殊资源" prop="resource">
-            <el-radio-group v-model="ruleForm.resource">
-              <el-radio label="线上品牌商赞助"></el-radio>
-              <el-radio label="线下场地免费"></el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="活动形式" prop="desc">
-            <el-input type="textarea" v-model="ruleForm.desc"></el-input>
-          </el-form-item>
-        -->
+
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">提交修改</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -191,7 +143,6 @@
       </el-drawer>
     </div>
     <!--是否保存场次-->
-
   </div>
 </template>
 
@@ -207,7 +158,6 @@ export default {
       timetitle: null,
       ruleForm: {
         name: '',
-
         region: '',
         date1: '',
         date2: '',
@@ -346,6 +296,7 @@ export default {
     }, 3000);
     const token = Cookies.get('token');
     if (token) {
+
       let tmp = JSON.parse(decodeURIComponent(atob(token)));
       // console.log(tmp);
       this.config.TTSspeed = tmp.setting.TTSspeed;
@@ -353,12 +304,16 @@ export default {
       this.config.TTSvoiceid = tmp.setting.TTSvoiceid;
       this.config.TTSstate = tmp.setting.TTSstate;
       this.config.TTSvolum = tmp.setting.TTSvolum;
+      this.user.nickname = tmp.nick_name;
+      //以下配置在比赛模式下将由裁判决定
+
       this.config.decimal = tmp.setting.decimal;
       this.config.time = tmp.setting.time;
       this.config.round = tmp.setting.round;
       this.config.firsttype = tmp.setting.firsttype;
       this.config.firstmode = tmp.setting.firstmode;
       this.config.oemtitle = tmp.setting.oemtitle;
+      
 
     } else {
       console.log('请先登录');
@@ -504,16 +459,17 @@ export default {
 
     },
     btnStart() {
-      this.$message.error('管理员已将本靶设置为比赛模式，请等待裁判发令！');
-
-      /** 
-      if (this.sysinfo.start == 0) {
+      if(this.sysinfo.start == 0){
         this.gameon();
-      } else {
+      }else if(this.sysinfo.start == 3){
         this.gameoff();
-
+        this.$message.error('本靶设置已经设置为比赛模式，提前结束将影响您的成绩！');
+      }else{
+        this.gameoff();
+        this.$message.error('管理员已将本靶设置为比赛模式，请等待裁判发令！');
       }
-      */
+      
+
     },
     btnClear() {
       if (!(this.sysinfo.start != 0) || this.sysinfo.mode == 0) {
@@ -554,78 +510,48 @@ export default {
       } else {
         console.log("正常请求" + this.sysinfo.mode + " " + this.sysinfo.start);
         this.timeLock = true;
-        axios.post('/api/shoot/getlist.php',
-          {
-            token: Cookies.get('token'),
-            baziId: this.$route.query.baziId,
-            startime: this.sysinfo.startTime,
-            endtime: this.sysinfo.endTime,
-            type: 0
-          })
-          .then(res => {
+        if (this.sysinfo.start == 1) {
+          let now = new Date().getTime();
+          axios
+            .get("/api/contest/getTime.php", {
+            })
+            .then((res) => {
+              if (res.data.code == 200) {
+                if (res.data.data.startTime > now && (res.data.data.startTime - now <= 3000 && res.data.data.startTime - now >= -100)) {
+                  this.sysinfo.start = 2;
+                  this.play("3", 1);
 
-            if (res.data.code == 200) {
-              //分模式
-
-              if (this.sysinfo.mode == 0) {
-                //练习模式
-                if (this.sysinfo.start == 0) {
-                  this.timeLock = false;
-                } else {
-                  for (let i = 0; i < res.data.data.length; i++) {
-                    //计算轮次
-                    let tmp = this.tmp;
-                    tmp.id = this.sysinfo.round;
-                    this.sysinfo.round = this.sysinfo.round + 1;
-                    //显示靶号，射击人，保存坐标
-                    tmp.bazi_id = res.data.data[i].bazi_id;
-                    tmp.username = this.user.nickname;
-                    tmp.point_x = res.data.data[i].point_x;
-                    tmp.point_y = res.data.data[i].point_y;
-                    tmp.shoot_time = res.data.data[i].shoot_time;
-                    //计算成绩
-                    let num = this.getrealnum(res.data.data[i].scoure)
-                    tmp.scoure = this.numTotext(num)
-
-                    //如果成绩是0显示脱靶但是不改内部
-                    if (tmp.scoure == 0) {
-                      this.nowscore = "脱靶";
-                      //报靶
-                      this.play(this.nowscore, 2);
-                    } else {
-                      this.nowscore = tmp.scoure;
-                      //报靶
-                      this.play(this.nowscore + "环", 2);
-                    }
-
-                    //显示方位，计算时间差
-                    tmp.type = this.dir[Number(res.data.data[i].type)];
-                    let timeab = 0.00;
-                    if (this.tableData.length != 0) {
-                      timeab = res.data.data[i].shoot_time - this.tableData[0].shoot_time;
-                      timeab = timeab / 1000;
-                      timeab = timeab.toFixed(2)
-                    } else {
-                      timeab = 0.00;
-                    }
-                    tmp.timeabs = timeab
-                    //累计成绩
-                    this.sysinfo.sum += Number(num);
-                    tmp.allsum = this.numTotext(this.sysinfo.sum);
-                    //插入队首
-                    this.tableData.unshift(JSON.parse(JSON.stringify(tmp)));
-                    this.playbiu();
-
-
-                    if (this.sysinfo.round > 999) {
-                      this.gameoff();
-                      break;
-                    }
-                  }
-                  this.timeLock = false;
+                  setTimeout(function () {
+                    that.play("2", 1);
+                  }, 1000);
+                  setTimeout(function () {
+                    that.play("1", 1);
+                  }, 2000);
+                  setTimeout(function () {
+                    that.play("比赛开始", 1);
+                    that.sysinfo.start = 3;
+                  }, 4000);
                 }
-
               } else {
+                this.$message.error(res.data.msg);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              this.$message.error("与射击服务器断开了连接 [" + err.message + "]");
+            });
+          this.timeLock = false;
+        } else {
+          axios.post('/api/shoot/getlist.php',
+            {
+              token: Cookies.get('token'),
+              baziId: this.$route.query.baziId,
+              startime: this.sysinfo.startTime,
+              endtime: this.sysinfo.endTime,
+              type: 0
+            })
+            .then(res => {
+              if (res.data.code == 200) {
                 //比赛模式
                 //没开始的所有信号都不算
                 //过滤中间态
@@ -707,18 +633,20 @@ export default {
                   this.timeLock = false;
                 }
 
+
+              } else {
+                this.$message.error(res.data.msg);
+                this.timeLock = false;
               }
-            } else {
-              this.$message.error(res.data.msg);
+            })
+            .catch(err => {
+              console.log(err);
               this.timeLock = false;
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            this.timeLock = false;
-            this.$message.error('与射击服务器断开了连接 [' + err.message + "]");
-            this.gameoff();
-          });
+              this.$message.error('与射击服务器断开了连接 [' + err.message + "]");
+              this.gameoff();
+            });
+        }
+
         this.reshBoard();
       }
 
@@ -864,7 +792,7 @@ export default {
           let tmp = JSON.parse(decodeURIComponent(atob(Cookies.get("token"))));
           tmp.setting = this.config;
           console.log(JSON.stringify(tmp));
-          console.log("json字符化后=" +JSON.stringify(tmp));
+          console.log("json字符化后=" + JSON.stringify(tmp));
           console.log("uri编码后" + encodeURIComponent(JSON.stringify(tmp)));
           let base64Buffer = Base64.encode(encodeURIComponent(JSON.stringify(tmp)));
 
@@ -959,7 +887,6 @@ export default {
         justify-content: flex-start;
         align-items: center;
         position: relative;
-
       }
 
       .rightbox {
@@ -989,7 +916,6 @@ export default {
     justify-content: center;
     text-align: center;
 
-    // align-items: center;
     .score-text {
       color: #00ff00;
       height: 100%;
@@ -1029,8 +955,6 @@ export default {
   }
 
 }
-
-
 
 .bazicanven {
   position: absolute;

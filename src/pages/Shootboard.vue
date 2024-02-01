@@ -860,15 +860,16 @@ export default {
           let tmp = JSON.parse(decodeURIComponent(atob(Cookies.get("token"))));
           tmp.setting = this.config;
           console.log(JSON.stringify(tmp));
-          let jsonBuffer = Buffer.from(JSON.stringify(tmp));
-          let base64Buffer = jsonBuffer.toString('base64');
+          console.log("json字符化后=" +JSON.stringify(tmp));
+          console.log("uri编码后" + encodeURIComponent(JSON.stringify(tmp)));
+          let base64Buffer = Base64.encode(encodeURIComponent(JSON.stringify(tmp)));
 
-
-          Cookies.set("token", base64Buffer);
+          Cookies.set("token", Base64.encode(encodeURIComponent(JSON.stringify(tmp))));
           console.log(base64Buffer);
           let tm = tmp.setting;
-          jsonBuffer = Buffer.from(JSON.stringify(tm));
-          base64Buffer = jsonBuffer.toString('base64');
+          //ase64Buffer = jsonBuffer.toString('base64');
+          base64Buffer = Base64.encode(encodeURIComponent(JSON.stringify(tm)));
+          console.log("加密后config" + base64Buffer);
           axios.post('/api/user/setuserconfig.php',
             {
               token: Cookies.get('token'),
@@ -895,6 +896,9 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    to(text){
+      this.$router.push("/"+text)
     }
 
   }
