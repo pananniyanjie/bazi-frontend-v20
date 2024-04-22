@@ -305,8 +305,9 @@ export default {
       this.config.TTSstate = tmp.setting.TTSstate;
       this.config.TTSvolum = tmp.setting.TTSvolum;
       this.user.nickname = tmp.nick_name;
-      //以下配置在比赛模式下将由裁判决定
 
+
+      //以下配置在比赛模式下将由裁判决定
       this.config.decimal = tmp.setting.decimal;
       this.config.time = tmp.setting.time;
       this.config.round = tmp.setting.round;
